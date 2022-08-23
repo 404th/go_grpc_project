@@ -114,6 +114,77 @@ func main() {
 		})
 	})
 
+	engine.PUT("/:id", func(c *gin.Context) {
+		var upd_book Book
+
+		if err := c.ShouldBindJSON(&upd_book); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "not updated",
+			})
+			return
+		}
+
+		str_id := c.Param("id")
+		id, err := strconv.Atoi(str_id)
+		if err != nil {
+			c.JSON(http.StatusBadGateway, gin.H{
+				"body": "invalid param while updating",
+			})
+			return
+		}
+
+		var exists bool = false
+		for key := range BookStore {
+			if key == id {
+				exists = true
+				BookStore[key] = upd_book
+				break
+			}
+		}
+
+		if !exists {
+			c.JSON(http.StatusNotFound, gin.H{
+				"message": "not found with the given id",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Updated successfully",
+		})
+	})
+
+	engine.DELETE("/:id", func(c *gin.Context) {
+		str_id := c.Param("id")
+		id, err := strconv.Atoi(str_id)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "Invalid param while deleting",
+			})
+			return
+		}
+
+		var exists bool = false
+		for key := range BookStore {
+			if key == id {
+				delete(BookStore, key)
+				exists = true
+				break
+			}
+		}
+
+		if !exists {
+			c.JSON(http.StatusNotFound, gin.H{
+				"message": "Item not found to delete",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": fmt.Sprintf("Book delete on item %d", id),
+		})
+	})
+
 	// listening port
 	engine.Run(":4040")
 }
