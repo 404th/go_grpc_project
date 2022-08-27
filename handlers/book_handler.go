@@ -10,7 +10,7 @@ import (
 )
 
 func GetBookList(c *gin.Context) {
-	resp := storage.GetBookListSg()
+	resp := storage.Store.GetBookListSg()
 	c.JSON(http.StatusOK, gin.H{
 		"message": "GetBookList",
 		"body":    resp,
@@ -27,7 +27,7 @@ func GetBookByID(c *gin.Context) {
 		return
 	}
 
-	bk, err := storage.GetBookByIDSg(id)
+	bk, err := storage.Store.GetBookByIDSg(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "error while getting book by id",
@@ -52,7 +52,7 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
-	if err := storage.CreateBookSg(data); err != nil {
+	if err := storage.Store.CreateBookSg(data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "error while creating book",
 			"body":    err,
@@ -86,7 +86,7 @@ func UpdateBook(c *gin.Context) {
 		return
 	}
 
-	if err := storage.UpdateBookSg(upd_book, id); err != nil {
+	if err := storage.Store.UpdateBookSg(upd_book, id); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "book not updated",
 			"body":    err.Error(),
@@ -110,7 +110,7 @@ func DeleteBook(c *gin.Context) {
 		return
 	}
 
-	if err := storage.DeleteBookSg(id); err != nil {
+	if err := storage.Store.DeleteBookSg(id); err != nil {
 		c.JSON(http.StatusNotModified, gin.H{
 			"message": "not deleted",
 			"body":    err.Error(),
