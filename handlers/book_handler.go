@@ -47,16 +47,18 @@ func CreateBook(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"body": "Bad data",
+			"message": "bad json",
+			"body":    err,
 		})
 		return
 	}
 
-	if err := storage.Store.CreateBookSg(data); err != nil {
+	if err := storage.PostgresStore.CreateBookSg(data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "error while creating book",
 			"body":    err,
 		})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{

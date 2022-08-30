@@ -1,6 +1,7 @@
 package models
 
 type Author struct {
-	Firstname  string `json:"firstname"`
-	Secondname string `json:"secondname"`
+	ID         string `json:"id" db:"id"`
+	Firstname  string `json:"firstname" db:"firstname"`
+	Secondname string `json:"secondname" db:"secondname"`
 }
